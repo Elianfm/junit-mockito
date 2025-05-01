@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.elianfm.appmockito.ejemplos.Data;
 import com.elianfm.appmockito.ejemplos.models.Exam;
 
 public class ExamRepositoryImpl implements ExamRepository {
@@ -13,22 +14,8 @@ public class ExamRepositoryImpl implements ExamRepository {
     public List<Exam> findAll() {
         // return Collections.emptyList(); // Simulamos una base de datos vacía 
         // (NO recomdable hacer esto solo para pruebas)
-
-        return Arrays.asList(new Exam(1L, "Matematicas", Arrays.asList("Pregunta 1", "Pregunta 2")),
-                new Exam(2L, "Historia", Arrays.asList("Pregunta 1", "Pregunta 2")),
-                new Exam(3L, "Geografia", Arrays.asList("Pregunta 1", "Pregunta 2")),
-                new Exam(4L, "Ciencias", Arrays.asList("Pregunta 1", "Pregunta 2")),
-                new Exam(5L, "Lengua", Arrays.asList("Pregunta 1", "Pregunta 2")),
-                new Exam(6L, "Ingles", Arrays.asList("Pregunta 1", "Pregunta 2")),
-                new Exam(7L, "Arte", Arrays.asList("Pregunta 1", "Pregunta 2")),
-                new Exam(8L, "Educacion Fisica", Arrays.asList("Pregunta 1", "Pregunta 2")),
-                new Exam(9L, "Musica", Arrays.asList("Pregunta 1", "Pregunta 2")),
-                new Exam(10L, "Programacion", Arrays.asList("Pregunta 1", "Pregunta 2")),
-                new Exam(11L, "Quimica", Arrays.asList("Pregunta 1", "Pregunta 2")),
-                new Exam(12L, "Biologia", Arrays.asList("Pregunta 1", "Pregunta 2")),
-                new Exam(13L, "Fisica", Arrays.asList("Pregunta 1", "Pregunta 2")),
-                new Exam(14L, "Etica", Arrays.asList("Pregunta 1", "Pregunta 2")),
-                new Exam(15L, "Civica", Arrays.asList("Pregunta 1", "Pregunta 2")));
+        System.out.println("Buscando todos los examenes");
+        return Data.DATA;
 
         // Al realizar pruebas unitarias, el codigo de anterior funcionara, pero si
         // queremos realizar pruebas con otros datos, podemos usar Mockito para
@@ -42,9 +29,8 @@ public class ExamRepositoryImpl implements ExamRepository {
 
     @Override
     public Exam save(Exam exam) {
-        // No implementamos el metodo save, ya que no es necesario para el ejemplo
-        // (se va a usar un mock para testearlo)
-        return exam;
+        System.out.println("Guardando examen: " + exam);
+        return Data.DATA.get(0);
     }
 
 }
