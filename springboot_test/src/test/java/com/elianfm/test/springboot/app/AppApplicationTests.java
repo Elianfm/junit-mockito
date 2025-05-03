@@ -81,10 +81,10 @@ class AppApplicationTests {
 
 		verify(accountRepository, times(3)).findById(1L);
 		verify(accountRepository, times(3)).findById(2L);
-		verify(accountRepository, times(2)).update(any(Account.class));
+		verify(accountRepository, times(2)).save(any(Account.class));
 
 		verify(bankRepository, times(2)).findById(1L);
-		verify(bankRepository, times(1)).update(any(Bank.class));
+		verify(bankRepository, times(1)).save(any(Bank.class));
 
 		verify(accountRepository, times(6)).findById(anyLong());
 		verify(accountRepository, never()).findAll();
@@ -121,10 +121,10 @@ class AppApplicationTests {
 
 		verify(accountRepository, times(3)).findById(1L);
 		verify(accountRepository, times(3)).findById(2L);
-		verify(accountRepository, never()).update(any(Account.class));
+		verify(accountRepository, never()).save(any(Account.class));
 
 		verify(bankRepository, times(2)).findById(1L);
-		verify(bankRepository, times(0)).update(any(Bank.class));
+		verify(bankRepository, times(0)).save(any(Bank.class));
 
 		verify(accountRepository, times(6)).findById(anyLong());
 		verify(accountRepository, never()).findAll();

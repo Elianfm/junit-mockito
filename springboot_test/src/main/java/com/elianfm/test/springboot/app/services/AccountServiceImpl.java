@@ -22,24 +22,27 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account findById(Long id) {
-        return accountRepository.findById(id);
+        return accountRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Account not found with id: " + id));
     }
 
     @Override
     public int checkTotalTransactions(Long bankId) {
-        Bank bank = bankRepository.findById(bankId);
+        Bank bank = bankRepository.findById(bankId)
+                .orElseThrow(() -> new IllegalArgumentException("Bank not found with id: " + bankId));
         if (bank == null)
             throw new IllegalArgumentException("Bank not found with id: " + bankId);
-        
+
         return bank.getTotalTransactions();
     }
 
     @Override
     public BigDecimal checkBalance(Long accountId) {
-        Account account = accountRepository.findById(accountId);
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new IllegalArgumentException("Account not found with id: " + accountId));
         if (account == null)
             throw new IllegalArgumentException("Account not found with id: " + accountId);
-        
+
         return account.getBalance();
     }
 
@@ -47,29 +50,31 @@ public class AccountServiceImpl implements AccountService {
     public void transfer(Long fromAccountId, Long toAccountId, BigDecimal amount,
             Long bankId) {
 
-        Bank bank = bankRepository.findById(bankId);
+        Bank bank = bankRepository.findById(bankId)
+                .orElseThrow(() -> new IllegalArgumentException("Bank not found with id: " + bankId));
         if (bank == null)
             throw new IllegalArgumentException("Bank not found with id: " + fromAccountId);
 
-        Account fromAccount = accountRepository.findById(fromAccountId);
-        Account toAccount = accountRepository.findById(toAccountId);
+        Account fromAccount = accountRepository.findById(fromAccountId)
+                .orElseThrow(() -> new IllegalArgumentException("From account not found with id: " + fromAccountId));
+        Account toAccount = accountRepository.findById(toAccountId)
+                .orElseThrow(() -> new IllegalArgumentException("To account not found with id: " + toAccountId));
 
         if (fromAccount == null)
             throw new IllegalArgumentException("From account not found with id: " + fromAccountId);
-        
+
         if (toAccount == null)
             throw new IllegalArgumentException("To account not found with id: " + toAccountId);
-        
 
         fromAccount.debit(amount);
         toAccount.credit(amount);
 
-        accountRepository.update(fromAccount);
-        accountRepository.update(toAccount);
+        accountRepository.save(fromAccount);
+        accountRepository.save(toAccount);
 
         int totalTransactions = bank.getTotalTransactions();
         bank.setTotalTransactions(++totalTransactions);
-        bankRepository.update(bank);
+        bankRepository.save(bank);
     }
 
 }
