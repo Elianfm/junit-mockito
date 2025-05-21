@@ -11,4 +11,6 @@ public interface AccountService {
     BigDecimal checkBalance(Long accountId);
     void transfer(Long fromAccountId, Long toAccountId, BigDecimal amount, Long bankId);
 
+    List<Account> findAll();
+    Account save(Account account);
 }

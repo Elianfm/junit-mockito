@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 import static com.elianfm.test.springboot.app.Data.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -146,6 +147,55 @@ class AppApplicationTests {
 
 		verify(accountRepository, times(2)).findById(1L);
 
+	}
+
+	@Test 
+	void testFindAll(){
+		// Given
+		List<Account> accounts = List.of(
+				createAccount001().orElseThrow(),
+				createAccount002().orElseThrow()
+		);
+		when(accountRepository.findAll()).thenReturn(accounts);
+
+		// When
+		List<Account> result = accountService.findAll();
+
+		// Then
+		assertFalse(result.isEmpty());
+		assertEquals(2, result.size());
+		assertTrue(result.contains(createAccount001().orElseThrow()));
+		assertEquals("Elian", result.get(0).getPerson());
+		assertEquals("Julián", result.get(1).getPerson());
+		assertEquals("1000.00", result.get(0).getBalance().toPlainString());
+		assertEquals("2000.00", result.get(1).getBalance().toPlainString());
+
+		verify(accountRepository, times(1)).findAll();
+		
+	}
+
+	@Test
+	void testCreate() {
+
+		// Given
+		Account account = new Account(null, "Picasso", new BigDecimal(1111.00));
+		when(accountRepository.save(any())).then( invocation -> {
+			Account acc = invocation.getArgument(0);
+			acc.setId(3L);
+			return acc;
+		});
+
+		// When
+		Account result = accountService.save(account);
+
+		// Then
+		assertNotNull(result);
+		assertEquals(3L, result.getId());
+		assertEquals("Picasso", result.getPerson());
+		assertEquals("1111", result.getBalance().toPlainString());
+
+		verify(accountRepository, times(1)).save(any());
+		
 	}
 
 }
