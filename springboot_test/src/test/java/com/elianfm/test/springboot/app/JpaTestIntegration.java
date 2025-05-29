@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -21,6 +22,7 @@ import com.elianfm.test.springboot.app.repositories.AccountRepository;
 
 // Los datos del import.sql se resetearán cada vez que se ejecute un @Test,
 // y cuando se finalicen todas las pruebas, se eliminará la base de datos en memoria.
+@Tag("integration_jpa")
 @DataJpaTest
 public class JpaTestIntegration {
     

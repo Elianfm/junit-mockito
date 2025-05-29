@@ -12,6 +12,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+
+// Generalmente solo tenemos un test de integración, pero en casos especiales
+// podemos tener varios, como aquí que usamos TestRestTemplate y WebTestClient
+// En estos casos podemos usar @Tag("integration_rt") y @Tag("integration_wc")
+// para diferenciarlos, de esta forma podemos excluir aquellos tests que no queremos e
+// ejecutar en un momento dado sin que afecte al resto de pruebas. 
+// El comando en la terminal sería:
+// ./mvnw test -Dgroups="integration_wc" para ejecutar solo los tests WebTestClient
+// ./mvnw test -Dgroups="!integration_wc" para ejecutar todos los tests excepto los WebTestClient
+@Tag("integration_wc")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class) // Permite ordenar los tests por anotaciones @Order
 @SpringBootTest( // A diferencia de @WebMvcTest, esta anotación carga toda la aplicación
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT // Usa un puerto aleatorio para evitar conflictos
