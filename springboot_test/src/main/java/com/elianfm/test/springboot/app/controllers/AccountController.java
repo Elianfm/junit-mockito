@@ -1,19 +1,23 @@
 package com.elianfm.test.springboot.app.controllers;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import static org.springframework.http.HttpStatus.*;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import com.elianfm.test.springboot.app.models.Account;
 import com.elianfm.test.springboot.app.models.TransactionDTO;
@@ -29,9 +33,17 @@ public class AccountController {
     private AccountService accountService;
 
     @GetMapping("/{id}")
-    @ResponseStatus(OK)
-    public Account detail(@PathVariable Long id) {
-        return accountService.findById(id);
+    //@ResponseStatus(OK)
+    public ResponseEntity<Account> detail(@PathVariable Long id) {
+        Account account = null;
+
+        try {
+            account = accountService.findById(id);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        return ResponseEntity.ok(account);
     }
 
     @GetMapping
@@ -55,12 +67,15 @@ public class AccountController {
                 "date", LocalDate.now(),
                 "status", "ok",
                 "message", "Transaction completed successfully",
-                "transaction", transactionDTO
-        );
+                "transaction", transactionDTO);
 
         return ResponseEntity.ok(response);
     }
 
-
+    @DeleteMapping("/{id}")
+    @ResponseStatus(NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        accountService.deleteById(id);
+    }
 
 }

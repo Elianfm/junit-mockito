@@ -25,8 +25,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional(readOnly = true)
     public Account findById(Long id) {
-        return accountRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Account not found with id: " + id));
+        return accountRepository.findById(id).get(); 
     }
 
     @Override
@@ -93,6 +92,17 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public Account save(Account account) {
         return accountRepository.save(account);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Account not found with id: " + id));
+        if (account == null)
+            throw new IllegalArgumentException("Account not found with id: " + id);
+
+        accountRepository.delete(account);
     }
 
 }
